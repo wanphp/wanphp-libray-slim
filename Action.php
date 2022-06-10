@@ -94,7 +94,7 @@ abstract class Action
   }
 
   /**
-   *  @OA\Schema(
+   * @OA\Schema(
    *   title="出错返回",
    *   schema="Error",
    *   type="object"
@@ -130,6 +130,22 @@ abstract class Action
   protected function respond($statusCode): Response
   {
     return $this->response->withHeader('Content-Type', 'application/json')->withStatus($statusCode);
+  }
+
+  protected function getLimit(): array
+  {
+    $params = $this->request->getQueryParams();
+    return [$params['start'] ?? 0, $params['length'] ?? 10];
+  }
+
+  protected function getOrder(): array
+  {
+    $params = $this->request->getQueryParams();
+    $order = [];
+    if (isset($params['order'])) foreach ($params['order'] as $param) {
+      $order[$params['columns'][$param['column']]['data']] = strtoupper($param['dir']);
+    }
+    return $order;
   }
 }
 

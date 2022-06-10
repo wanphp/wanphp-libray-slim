@@ -77,6 +77,11 @@ abstract class Action
   }
 
   /**
+   * @OA\Schema(
+   *   title="成功返回",
+   *   schema="Success",
+   *   type="object"
+   * )
    * @param array $data
    * @param int $statusCode
    * @return Response
@@ -89,6 +94,11 @@ abstract class Action
   }
 
   /**
+   *  @OA\Schema(
+   *   title="出错返回",
+   *   schema="Error",
+   *   type="object"
+   * )
    * @param null $error
    * @param int $statusCode
    * @return Response
@@ -122,3 +132,12 @@ abstract class Action
     return $this->response->withHeader('Content-Type', 'application/json')->withStatus($statusCode);
   }
 }
+
+/**
+ * @OA\SecurityScheme(
+ *   securityScheme="bearerAuth",
+ *   type="http",
+ *   scheme="bearer",
+ *   bearerFormat="JWT",
+ * )
+ */

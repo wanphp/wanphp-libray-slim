@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
+use Slim\Exception\HttpUnauthorizedException;
 use Slim\Views\Twig;
 
 abstract class Action
@@ -77,11 +78,17 @@ abstract class Action
   }
 
   /**
-   * @OA\Schema(
-   *   title="成功返回",
-   *   schema="Success",
-   *   type="object"
-   * )
+   * @return int
+   * @throws HttpUnauthorizedException
+   */
+  protected function getUid(): int
+  {
+    $userid = (int)$this->request->getAttribute('oauth_user_id', 0);
+    if ($userid < 1) throw new HttpUnauthorizedException($this->request, "未知用户!");
+    return $userid;
+  }
+
+  /**
    * @param array $data
    * @param int $statusCode
    * @return Response
@@ -94,11 +101,6 @@ abstract class Action
   }
 
   /**
-   * @OA\Schema(
-   *   title="出错返回",
-   *   schema="Error",
-   *   type="object"
-   * )
    * @param null $error
    * @param int $statusCode
    * @return Response
@@ -148,12 +150,3 @@ abstract class Action
     return $order;
   }
 }
-
-/**
- * @OA\SecurityScheme(
- *   securityScheme="bearerAuth",
- *   type="http",
- *   scheme="bearer",
- *   bearerFormat="JWT",
- * )
- */

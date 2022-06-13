@@ -19,7 +19,7 @@
     "ext-json": "*",
     "php-di/php-di": "^6.4",
     "slim/psr7": "^1.5",
-    "slim/slim": "^4.10",
+    "slim/slim": "^4.9",
     "slim/twig-view": "^3.1"
   },
   "autoload": {
@@ -30,7 +30,7 @@
   "repositories": {
     "packagist": {
       "type": "composer",
-      "url": "https://mirrors.cloud.tencent.com/composer/"
+      "url": "https://mirrors.aliyun.com/composer/"
     }
   }
 }

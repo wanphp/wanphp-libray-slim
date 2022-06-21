@@ -56,14 +56,18 @@ abstract class Action
   abstract protected function action(): Response;
 
   /**
-   * @return array|object
+   * @return array
    * @throws HttpBadRequestException
    */
-  protected function getFormData(): object|array
+  protected function getFormData(): array
   {
-    $input = json_decode(file_get_contents('php://input'));
-    if (json_last_error() !== JSON_ERROR_NONE) throw new HttpBadRequestException($this->request, 'JSON串格式错误。');
-    return $input;
+    if (str_contains($this->request->getHeaderLine('Content-Type'), 'application/json')) {
+      $postData = json_decode(file_get_contents('php://input'), true);
+      if (json_last_error() !== JSON_ERROR_NONE) throw new HttpBadRequestException($this->request, '提交JSON串格式错误。');
+    } else {
+      $postData = $this->request->getParsedBody();
+    }
+    return $postData;
   }
 
   /**

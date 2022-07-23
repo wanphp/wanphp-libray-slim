@@ -99,7 +99,7 @@ abstract class Action
    */
   protected function respondWithData(array $data = [], int $statusCode = 200): Response
   {
-    $json = json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE);
+    $json = json_encode($data, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE + JSON_NUMERIC_CHECK);
     $this->response->getBody()->write($json);
     return $this->respond($statusCode);
   }

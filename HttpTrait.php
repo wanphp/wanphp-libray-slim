@@ -17,7 +17,7 @@ trait HttpTrait
    * @return array
    * @throws Exception
    */
-  private function request(Client $client, string $method, string $uri, array $options): array
+  private function request(Client $client, string $method, string $uri = '', array $options = []): array
   {
     try {
       $resp = $client->request($method, $uri, $options);
@@ -27,11 +27,28 @@ trait HttpTrait
         if (str_contains($content_type, 'application/json') || str_contains($content_type, 'text/plain')) {
           $json = json_decode($body, true);
           if (json_last_error() === JSON_ERROR_NONE) {
-            if (isset($json['errMsg'])) {
+            if (isset($json['errcode']) && $json['errcode'] != 0) {
+              throw new Exception($json['errcode'] . ' - ' . $json['errmsg'], 400);
+            } else if (isset($json['errMsg'])) {
               throw new Exception($json['errMsg'], 400);
             } else {
               return $json;
             }
+          }
+        }
+        // 微信公众号接口返回
+        if (str_contains($content_type, 'application/xml') || str_contains($content_type, 'text/plain')) {
+          $result = $this->fromXml($body);
+          if ($result) {
+            // 请求失败
+            if (isset($result['return_code']) && $result['return_code'] === 'FAIL') {
+              throw new Exception('FAIL - ' . $result['return_msg'], 400);
+            }
+
+            if (isset($result['result_code']) && $result['result_code'] === 'FAIL') {
+              throw new Exception($result['err_code'] . ' - ' . $result['err_code_des'], 400);
+            }
+            return $result;
           }
         }
         return ['content_type' => $content_type, 'content_disposition' => $resp->getHeaderLine('Content-disposition'), 'body' => $body];
@@ -48,5 +65,39 @@ trait HttpTrait
     } catch (GuzzleException $e) {
       throw new Exception($e->getMessage(), $e->getCode());
     }
+  }
+
+  public function getClientIP()
+  {
+    return $_SERVER['HTTP_X_REAL_IP'] ?? $_SERVER['REMOTE_ADDR'];
+  }
+
+  /**
+   * @param $data
+   * @return string
+   */
+  public function toXml($data): string
+  {
+    $xml = "<xml>";
+    foreach ($data as $key => $val) {
+      if (is_numeric($val)) {
+        $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
+      } else {
+        $xml .= "<" . $key . "><![CDATA[" . preg_replace("/[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]/", '', $val) . "]]></" . $key . ">";
+      }
+    }
+    $xml .= "</xml>";
+    return $xml;
+  }
+
+  /**
+   * 将xml转为array
+   * @param $xml
+   * @return array
+   */
+  public function fromXml($xml): array
+  {
+    if (!$xml) return [];
+    return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
   }
 }

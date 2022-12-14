@@ -74,20 +74,20 @@ trait HttpTrait
 
   /**
    * @param $data
+   * @param bool $return
    * @return string
    */
-  public function toXml($data): string
+  public function toXml($data, bool $return = true): string
   {
-    $xml = "<xml>";
+    $xml = '';
     foreach ($data as $key => $val) {
-      if (is_numeric($val)) {
-        $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
-      } else {
-        $xml .= "<" . $key . "><![CDATA[" . preg_replace("/[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]/", '', $val) . "]]></" . $key . ">";
-      }
+      is_numeric($key) && $key = "item";
+      $xml .= "<$key>";
+      $xml .= is_array($val) ? $this->toXml($val, false) : '<![CDATA[' . preg_replace("/[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]/", '', $val) . ']]>';
+      $xml .= "</$key>";
     }
-    $xml .= "</xml>";
-    return $xml;
+    if ($return) return '<xml>' . $xml . '</xml>';
+    else return $xml;
   }
 
   /**

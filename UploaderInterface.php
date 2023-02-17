@@ -2,18 +2,17 @@
 
 namespace Wanphp\Libray\Slim;
 
-use Psr\Http\Message\UploadedFileInterface;
+use Slim\Psr7\UploadedFile;
 
 interface UploaderInterface
 {
   /**
    * 上传文件
-   * @param string $directory
    * @param array $formData
-   * @param UploadedFileInterface $uploadedFile
+   * @param UploadedFile $uploadedFile
    * @return array
    */
-  public function uploadFile(string $directory, array $formData, UploadedFileInterface $uploadedFile): array;
+  public function uploadFile(array $formData, UploadedFile $uploadedFile): array;
 
   /**
    * 设置文件名称

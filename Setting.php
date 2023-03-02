@@ -29,6 +29,6 @@ class Setting
    */
   public function get(string $key = ''): mixed
   {
-    return empty($key) ? $this->settings : $this->settings[$key];
+    return empty($key) ? $this->settings : $this->settings[$key] ?? '';
   }
 }

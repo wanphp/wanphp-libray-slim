@@ -15,4 +15,10 @@ interface WpUserInterface
   public function searchUsers(string $keyword, int $page = 0): array;
 
   public function sendMessage(array $uidArr, array $msgData): array;
+
+  public function membersTagging(string $uid, int $tagId): array;
+
+  public function membersUnTagging(string $uid, int $tagId): array;
+
+  public function userLogin(string $account, string $password): bool|string;
 }

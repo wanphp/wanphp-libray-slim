@@ -20,5 +20,5 @@ interface WpUserInterface
 
   public function membersUnTagging(string $uid, int $tagId): array;
 
-  public function userLogin(string $account, string $password): bool|string;
+  public function userLogin(string $account, string $password): int|string;
 }

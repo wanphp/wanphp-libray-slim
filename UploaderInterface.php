@@ -24,10 +24,10 @@ interface UploaderInterface
 
   /**
    * 删除文件
-   * @param string $file 文件ID或文件路径
+   * @param int|string $file 文件ID或文件路径
    * @return int
    */
-  public function delFile(string $file): int;
+  public function delFile(int|string $file): int;
 
   /**
    * 允许上传文件扩展名

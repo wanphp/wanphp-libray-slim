@@ -93,6 +93,26 @@ abstract class Action
   }
 
   /**
+   * @return string
+   * @throws HttpUnauthorizedException
+   */
+  protected function getClientID(): string
+  {
+    $id = $this->request->getAttribute('oauth_client_id', '');
+    if ($id == '') throw new HttpUnauthorizedException($this->request, "未知客户端!");
+    return $id;
+  }
+
+  /**
+   * @return array
+   * @throws HttpUnauthorizedException
+   */
+  protected function getScopes(): array
+  {
+    return $this->request->getAttribute('oauth_scopes', []);
+  }
+
+  /**
    * @param array $data
    * @param int $statusCode
    * @return Response

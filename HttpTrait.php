@@ -17,7 +17,7 @@ trait HttpTrait
    * @return array
    * @throws Exception
    */
-  private function request(Client $client, string $method, string $uri = '', array $options = []): array
+  protected function request(Client $client, string $method, string $uri = '', array $options = []): array
   {
     try {
       $resp = $client->request($method, $uri, $options);

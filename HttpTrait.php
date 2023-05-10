@@ -22,7 +22,7 @@ trait HttpTrait
     try {
       $resp = $client->request($method, $uri, $options);
       $body = $resp->getBody()->getContents();
-      if ($resp->getStatusCode() == 200) {
+      if (in_array($resp->getStatusCode(), [200, 201])) {
         $content_type = $resp->getHeaderLine('Content-Type');
         if (str_contains($content_type, 'application/json') || str_contains($content_type, 'text/plain')) {
           $json = json_decode($body, true);

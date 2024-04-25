@@ -108,4 +108,11 @@ interface WpUserInterface
    * @throws Exception
    */
   public function updateOauthUser(string $access_token, array $data): array;
+
+  /**
+   * 检查用户授权，过期则刷新
+   * @return string $access_token
+   * @throws Exception
+   */
+  public function checkOauthUser(): string;
 }

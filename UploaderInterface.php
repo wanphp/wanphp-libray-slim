@@ -15,6 +15,13 @@ interface UploaderInterface
   public function uploadFile(array $formData, UploadedFile $uploadedFile): array;
 
   /**
+   * 下载文件
+   * @param string $url
+   * @return array
+   */
+  public function downloadFile(string $url): array;
+
+  /**
    * 设置文件名称
    * @param int $id
    * @param string $name
